@@ -3,26 +3,7 @@ import { gsap } from "gsap";
 import type { AnimationConfig } from "./animation-config";
 
 // Default animation configuration
-const defaultConfig: AnimationConfig = {
-  steps: 20,
-  stepDuration: 0.05,
-  stepInterval: 0.02,
-  rotationRange: 360,
-  wobbleStrength: 20,
-  moverPauseBeforeExit: 0.2,
-  clipPathDirection: "top-bottom",
-  panelRevealEase: "power2.inOut",
-  gridItemEase: "power2.inOut",
-  moverEnterEase: "power4.out",
-  moverExitEase: "power4.in",
-  panelRevealDurationFactor: 1,
-  clickedItemDurationFactor: 1,
-  gridItemStaggerFactor: 0.1,
-  moverBlendMode: null,
-  pathMotion: "linear",
-  sineAmplitude: 0,
-  sineFrequency: 5,
-};
+// Removed unused defaultConfig to resolve the error
 
 // Linear interpolation helper
 export const lerp = (a: number, b: number, t: number): number =>
@@ -37,7 +18,8 @@ export const getElementCenter = (el: HTMLElement): { x: number; y: number } => {
 // Compute stagger delays for grid item exit animations
 export const computeStaggerDelays = (
   clickedItem: HTMLElement,
-  items: NodeListOf<HTMLElement> | HTMLElement[]
+  items: NodeListOf<HTMLElement> | HTMLElement[],
+  config: AnimationConfig
 ): number[] => {
   const baseCenter = getElementCenter(clickedItem);
   const distances = Array.from(items).map((el) => {
@@ -46,7 +28,7 @@ export const computeStaggerDelays = (
   });
   const max = Math.max(...distances);
   return distances.map(
-    (d, i) => (d / max) * defaultConfig.gridItemStaggerFactor
+    (d, _) => (d / max) * config.gridItemStaggerFactor
   );
 };
 
@@ -159,8 +141,7 @@ export const createMoverStyle = (
 
 // Extract data attributes from an element to override config
 export const extractItemConfigOverrides = (
-  item: HTMLElement,
-  defaultConfig: AnimationConfig
+  item: HTMLElement
 ): Partial<AnimationConfig> => {
   const dataset = item.dataset;
   const overrides: Partial<AnimationConfig> = {};

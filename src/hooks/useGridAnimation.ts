@@ -191,13 +191,13 @@ export const useGridAnimation = () => {
 
     gsap.to(items, {
       opacity: 0,
-      scale: (i: number, el: HTMLElement) => (el === clickedItem ? 1 : 0.8),
-      duration: (i: number, el: HTMLElement) =>
+      scale: (_: number, el: HTMLElement) => (el === clickedItem ? 1 : 0.8),
+      duration: (_: number, el: HTMLElement) =>
         el === clickedItem
           ? config.stepDuration * config.clickedItemDurationFactor
           : 0.3,
       ease: config.gridItemEase,
-      clipPath: (i: number, el: HTMLElement) =>
+      clipPath: (_: number, el: HTMLElement) =>
         el === clickedItem ? clipPaths.from : "none",
       delay: (i: number) => delays[i],
     });

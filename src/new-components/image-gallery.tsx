@@ -5,7 +5,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
-import Frame from "./frame";
 import Grid from "./grid";
 import type { AnimationConfig } from "../utils/animation-config";
 import { preloadImages } from "../utils/preload-images";
@@ -20,7 +19,7 @@ export default function ImageGallery() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [currentItem, setCurrentItem] = useState<ImageItem | null>(null);
-  const [selectedEffect, setSelectedEffect] = useState<string>("effect01");
+  const [selectedEffect] = useState<string>("effect01");
   const gridRef = useRef<HTMLDivElement>(null);
   const moversRef = useRef<HTMLDivElement[]>([]);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -322,14 +321,14 @@ export default function ImageGallery() {
 
     gsap.to(items, {
       opacity: 0,
-      scale: (i, el) => (el === clickedItem ? 1 : 0.8),
-      duration: (i, el) =>
+      scale: (_, el) => (el === clickedItem ? 1 : 0.8),
+      duration: (_, el) =>
         el === clickedItem
           ? configRef.current.stepDuration *
             configRef.current.clickedItemDurationFactor
           : 0.3,
       ease: configRef.current.gridItemEase,
-      clipPath: (i, el) => (el === clickedItem ? clipPaths.from : "none"),
+      clipPath: (_, el) => (el === clickedItem ? clipPaths.from : "none"),
       delay: (i) => delays[i],
     });
   };

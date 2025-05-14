@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 type GridItemData = {
@@ -31,7 +31,7 @@ const gridItems = [
 const AnimatedGrid = () => {
   const gridRef = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  // Removed unused state variable 'isPanelOpen'
   const [currentItem, setCurrentItem] = useState<HTMLElement | null>(null);
 
   const config = {
@@ -63,7 +63,7 @@ const AnimatedGrid = () => {
         return new Promise<void>((resolve) => {
           const image = img as HTMLImageElement;
           if (image.complete) resolve();
-          image.onload = resolve;
+          image.onload = () => resolve();
         });
       });
       return Promise.all(promises);
@@ -80,7 +80,7 @@ const AnimatedGrid = () => {
     setCurrentItem(item);
 
     const imgURL =
-      item.querySelector(".grid__item-image")?.style.backgroundImage || "";
+      (item.querySelector(".grid__item-image") as HTMLElement)?.style.backgroundImage || "";
     const title = item.querySelector("figcaption h3")?.textContent || "";
     const desc = item.querySelector("figcaption p")?.textContent || "";
 
@@ -110,13 +110,13 @@ const AnimatedGrid = () => {
 
     gsap.to(allItems, {
       opacity: 0,
-      scale: (i, el) => (el === clickedItem ? 1 : 0.8),
-      duration: (i, el) =>
+      scale: (_, el) => (el === clickedItem ? 1 : 0.8),
+      duration: (_, el) =>
         el === clickedItem
           ? config.stepDuration * config.clickedItemDurationFactor
           : 0.3,
       ease: config.gridItemEase,
-      clipPath: (i, el) => (el === clickedItem ? clipPaths.from : "none"),
+      clipPath: (_, el) => (el === clickedItem ? clipPaths.from : "none"),
     });
   };
 
@@ -201,7 +201,7 @@ const AnimatedGrid = () => {
   const createMoverStyle = (step: any, index: number) => {
     const style: any = {
       backgroundImage:
-        currentItem?.querySelector(".grid__item-image")?.style.backgroundImage,
+        (currentItem?.querySelector(".grid__item-image") as HTMLElement)?.style.backgroundImage,
       position: "fixed",
       left: step.left,
       top: step.top,
@@ -271,10 +271,7 @@ const AnimatedGrid = () => {
         { clipPath: "inset(100% 0% 0% 0%)" },
         { clipPath: "inset(0% 0% 0% 0%)" }
       );
-    setTimeout(
-      () => setIsPanelOpen(true),
-      config.stepDuration * config.panelRevealDurationFactor * 1000
-    );
+    // Removed unused 'setIsPanelOpen' call
   };
 
   return (

@@ -86,10 +86,7 @@ const GridItem: React.FC<GridItemProps> = ({
 
     // Extract config overrides from data attributes
     if (itemRef.current) {
-      const overrides = extractItemConfigOverrides(
-        itemRef.current,
-        defaultConfig
-      );
+      const overrides = extractItemConfigOverrides(itemRef.current);
       setConfig((prev) => ({ ...prev, ...overrides }));
     }
 
@@ -147,14 +144,14 @@ const GridItem: React.FC<GridItemProps> = ({
       const clipPaths = getClipPathsForDirection(config.clipPathDirection);
 
       gsap.to(allItems, {
-        opacity: (i, el) => (el === clickedItem ? 1 : 0),
-        scale: (i, el) => (el === clickedItem ? 1 : 0.8),
-        duration: (i, el) =>
+        opacity: (_, el) => (el === clickedItem ? 1 : 0),
+        scale: (_, el) => (el === clickedItem ? 1 : 0.8),
+        duration: (_, el) =>
           el === clickedItem
             ? config.stepDuration * config.clickedItemDurationFactor
             : 0.3,
         ease: config.gridItemEase,
-        clipPath: (i, el) => (el === clickedItem ? clipPaths.from : "none"),
+        clipPath: (_, el) => (el === clickedItem ? clipPaths.from : "none"),
       });
     }
   }, [isOpen, id, image, config]);
